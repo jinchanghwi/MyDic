@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mydic.community.CommunityDao">
+<insert id="insertCommunity" parameterType="com.mydic.community.CommunityVo">
+<![CDATA[
+	insert into mydiccommunity(idx,id,title,
+	content,parent,writedate,sort,lvl)
+	
+	values(mydiccommunity_seq.nextval,#{id},#{title},
+	#{content},#{parent},sysdate,mydiccommunity_seq.currval,#{lvl})
+]]>
+</insert>
+<insert id="insertReply" parameterType="com.mydic.community.CommunityVo">
+<![CDATA[
+	insert into mydiccommunity(idx,id,title,
+	content,parent,writedate,sort,lvl)
+	
+	values(mydiccommunity_seq.nextval,#{id},#{title},
+	#{content},#{parent},sysdate,#{sort},#{lvl})
+]]>
+</insert>
+<select id="getSort" resultType="int" parameterType="com.mydic.community.CommunityVo">
+<![CDATA[
+	select max(sort)+1 from mydiccommunity
+]]>
+</select>
+<update id="updateCommunity" parameterType="com.mydic.community.CommunityVo">
+<![CDATA[
+	update mydiccommunity set head=#{head},title=#{title},content=#{content},word=#{word} where idx=#{idx}
+]]>
+</update>
+
+<delete id="deleteCommunity" parameterType="com.mydic.community.CommunityVo">
+<![CDATA[
+	delete from mydiccommunity where idx=#{idx}
+]]>
+</delete>
+
+<select id="getCommunity" resultType="com.mydic.community.CommunityVo" parameterType="com.mydic.community.CommunityVo">
+<![CDATA[
+	select rownum , K2.* 
+	from (select rownum as rnum, K1.* 
+			from (select * 
+					from mydiccommunity
+					where parent=0
+					order by idx desc) K1 
+			where rownum <= #{nowRecord}+9) K2
+	where rnum >= #{nowRecord}
+]]>
+</select>
+<select id="totalRecord" resultType="int" parameterType="com.mydic.community.CommunityVo">
+<![CDATA[
+	select count (*) 
+	from mydiccommunity
+	where parent=0
+]]>
+</select>
+<select id="getReply" resultType="com.mydic.community.CommunityVo" 
+					  parameterType="com.mydic.community.CommunityVo">
+<![CDATA[
+	select c.idx,c.id,content,parent,filename,writedate,sort,lvl
+	from mydiccommunity c 
+	join mydicuser u 
+	on c.id=u.id  
+	where parent=#{parent}
+	order by sort,lvl,idx
+]]>
+</select>
+
+<select id="comucontent" resultType="com.mydic.community.CommunityVo" parameterType="com.mydic.community.CommunityVo">
+<![CDATA[
+	select * from mydiccommunity where idx=#{idx}
+]]>
+</select>
+</mapper>

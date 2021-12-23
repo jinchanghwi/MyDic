@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mydic.user.UserDao">
+<insert id="join" parameterType="com.mydic.user.UserVo">
+<![CDATA[
+	insert into mydicuser values(mydicuser_seq.nextval,#{id},#{pwd},#{name},#{email},#{pwd_hash},#{filename})
+]]>
+</insert>
+
+<select id="login" resultType="String" parameterType="com.mydic.user.UserVo">
+<![CDATA[
+	select id from mydicuser where id=#{id} and pwd_hash=#{pwd_hash}
+]]>
+</select>
+
+<select id="myinfo" resultType="com.mydic.user.UserVo" parameterType="com.mydic.user.UserVo">
+<![CDATA[
+	select * from mydicuser where id=#{id}
+]]>
+</select>
+
+<update id="myinfoupdate" parameterType="com.mydic.user.UserVo">
+<![CDATA[
+	update mydicuser set name=#{name}, email=#{email}, filename=#{filename} where id=#{id}
+]]>
+</update>
+
+<update id="myinfoupdatepwd" parameterType="com.mydic.user.UserVo">
+<![CDATA[
+	update mydicuser set pwd=#{pwd}, pwd_hash=#{pwd_hash}, name=#{name}, email=#{email}, filename=#{filename} where id=#{id}
+]]>
+</update>
+
+<delete id="myinfodelete" parameterType="com.mydic.user.UserVo">
+<![CDATA[
+	delete from mydicuser where id=#{id}
+]]>
+</delete>
+<delete id="myBoarddelete" parameterType="com.mydic.user.UserVo">
+<![CDATA[
+	delete from mydicboard where id=#{id}
+]]>
+</delete>
+<delete id="myComudelete" parameterType="com.mydic.user.UserVo">
+<![CDATA[
+	delete from mydiccommunity where id=#{id}
+]]>
+</delete>
+<select id="getFilename" resultType="String" parameterType="com.mydic.user.UserVo">
+	<![CDATA[
+		select filename from mydicuser where id=#{id}
+	]]>
+</select>
+
+<select id="overlap" resultType="String" parameterType="com.mydic.user.UserVo">
+	<![CDATA[
+		select id from mydicuser where id=#{id}
+	]]>
+</select>
+</mapper>

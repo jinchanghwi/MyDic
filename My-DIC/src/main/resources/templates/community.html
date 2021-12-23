@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link href="/include/css/main.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+table {
+	border: 5px;
+	border-style: ridge;
+}
+th{
+	background-color: #79B4B7;
+}
+td{
+	background-color: #F8F0DF;
+}
+#endStop,#startStop{
+	color: red;
+}
+</style>
+</head>
+<body>
+<div th:replace="/include/header"></div>
+<div th:replace="/include/nav"></div>
+<section>
+<br>
+<div id="sectionDiv" align="center">
+<table border="1" width="650">
+	<caption>
+		<div align="right">
+			<button onClick="location.href='/newcommunity.do'">글쓰기</button>
+		</div>
+	</caption>
+	<tr>
+		<th width="75" align="center">작성자</th>
+		<th align="center">제목</th>
+		<th width="75" align="center">작성일</th>
+	</tr>
+	<tr th:each="m : ${li}">
+		<td align="right" th:text="${m.id}"></td>
+		<td><a th:href="@{/comucontent.do(idx=${m.idx}, id=${m.id})}" th:text="${m.title}"></a></td>
+		<td th:text="${#strings.substring(m.writedate, 2, 10)}" align="center"></td>
+	</tr>
+</table>
+</div>
+<div>
+<a 
+	th:href="@{/community.do(nowRecord=1)}" 
+	th:if="${1<page.nowPage}">
+	맨앞
+</a>
+<a 
+	th:href="@{/community.do(nowRecord=${page.nowRecord-page.listSize})}" 
+	th:if="${1<page.nowPage}">
+	이전
+</a>
+<span th:if="${1>=page.nowPage}" id="startStop">맨앞 이전</span>
+<span th:each="list: ${#numbers.sequence(page.startPage-1, page.endPage-1)}">
+	<a
+		th:href="@{/community.do(nowRecord=${list*page.listSize+1})}" 
+		th:text="${list+1}"
+		th:if="${list<page.totalPage}"
+	></a>
+</span>
+<span th:if="${page.totalPage<=page.nowPage}" id="endStop">다음 맨뒤</span>
+<a 
+	th:href="@{/community.do(nowRecord=${page.nowRecord+page.listSize})}"
+	th:if="${page.totalPage>page.nowPage}">
+	다음
+</a>
+<a 
+	th:href="@{/community.do(nowRecord=${page.totalRecord/10*10+1})}"
+	th:if="${page.totalPage>page.nowPage}">
+	맨뒤
+</a>
+</div>
+<br>
+</section>
+<div th:replace="/include/footer"></div>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mydic.board.BoardDao">
+<insert id="boardInsert" parameterType="com.mydic.board.BoardVo">
+<![CDATA[
+	insert into mydicboard (idx,id,head,title,content,word,writedate)
+	values(mydicboard_seq.nextval,#{id},#{head},#{title},#{content},#{word},sysdate)
+]]>
+</insert>
+<update id="boardUpdate" parameterType="com.mydic.board.BoardVo">
+<![CDATA[
+	update mydicboard set head=#{head},title=#{title},content=#{content},word=#{word} where idx=#{idx}
+]]>
+</update>
+<delete id="boardDelete" parameterType="com.mydic.board.BoardVo">
+<![CDATA[
+	delete from mydicboard where idx=#{idx}
+]]>
+</delete>
+<select id="content" resultType="com.mydic.board.BoardVo" parameterType="com.mydic.board.BoardVo">
+<![CDATA[
+	select * from mydicboard where idx=#{idx}
+]]>
+</select>
+
+<select id="getMyBoard" resultType="com.mydic.board.BoardVo" parameterType="com.mydic.board.BoardVo">
+<![CDATA[
+	select rownum , K2.* 
+	from (select rownum as rnum, K1.* 
+			from (select * 
+					from mydicboard
+					where id=#{id}
+					]]>
+						<if test="ch1=='word'">
+							<![CDATA[
+								and upper(word) like upper('%'||#{ch2}||'%')
+							]]>
+						</if>
+						<if test="ch1=='head'">
+							<![CDATA[
+								and upper(head) like upper('%'||#{ch2}||'%')
+							]]>
+						</if>
+						<if test="ch1=='title'">
+							<![CDATA[
+								and upper(title) like upper('%'||#{ch2}||'%')
+							]]>
+						</if>
+						<if test="ch1=='content'">
+							<![CDATA[
+								and upper(content) like upper('%'||#{ch2}||'%')
+							]]>
+						</if>
+					<![CDATA[
+					order by idx desc) K1 
+			where rownum <= #{nowRecord}+9) K2
+	where rnum >= #{nowRecord}
+]]>
+</select>
+
+
+
+<select id="totalRecord" resultType="int" parameterType="com.mydic.board.BoardVo">
+<![CDATA[
+	select count (*) 
+	from mydicboard 
+	where id=#{id}
+	]]>
+						<if test="ch1=='word'">
+							<![CDATA[
+								and upper(word) like upper('%'||#{ch2}||'%')
+							]]>
+						</if>
+						<if test="ch1=='head'">
+							<![CDATA[
+								and upper(head) like upper('%'||#{ch2}||'%')
+							]]>
+						</if>
+						<if test="ch1=='title'">
+							<![CDATA[
+								and upper(title) like upper('%'||#{ch2}||'%')
+							]]>
+						</if>
+						<if test="ch1=='content'">
+							<![CDATA[
+								and upper(content) like upper('%'||#{ch2}||'%')
+							]]>
+						</if>
+					<![CDATA[
+]]>
+</select>
+
+</mapper>

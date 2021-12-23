@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link href="/include/css/main.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+	.notookBtn{
+		width: 200px;
+		height: 50px;
+	}
+	.gotoBoardBtn{
+		width: 50px;
+		height: 50px;
+	}
+	textarea{
+		width: 520px;
+		margin: 0px;
+		height: 457px;
+		resize: none;
+	}
+</style>
+<script type="text/javascript">
+function comuCheck() {
+	if(comuForm.title.value==""){
+		alert("제목을 작성해주세요");
+		return false;
+	}
+	else if(comuForm.content.value==""){
+		alert("내용을 입력해주세요");
+		return false;
+	}
+}
+</script>
+</head>
+<body>
+<div th:replace="/include/header"></div>
+<div th:replace="/include/nav"></div>
+<section>
+<div id="sectionDiv" align="center">
+<br>
+<form action="/insertCommunity.do" name="comuForm" onsubmit="return comuCheck()">
+<table width="650">
+	<tr>
+		<td align="right" >제목 : </td>
+		<td><input type="text" name="title" size="70"></td>
+	</tr>
+	<tr>
+		<td align="right">내용 : </td>
+		<td colspan="2"><textarea name="content"></textarea></td>
+	</tr>
+</table>
+<button type="button" class="gotoBoardBtn" onclick="location.href='/community.do'">목록</button>
+<button type="submit" class="gotoBoardBtn">작성</button>
+<input type="hidden" name="id" th:value="${session.id}">
+</form>
+<br>
+</div>
+</section>
+<div th:replace="/include/footer"></div>
+</body>
+</html>

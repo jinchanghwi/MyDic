@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link href="/include/css/main.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+	.notookBtn{
+		width: 200px;
+		height: 50px;
+	}
+	.gotoBoardBtn{
+		width: 50px;
+		height: 50px;
+	}
+</style>
+<script type="text/javascript">
+function noteCheck() {
+	if(noteForm.head.value==""){
+		alert("카테고리를 지정해주세요");
+		return false;
+	}
+	else if(noteForm.title.value==""){
+		alert("제목을 작성해주세요");
+		return false;
+	}
+	else if(noteForm.content.value==""){
+		alert("내용을 입력해주세요");
+		return false;
+	}
+}
+</script>
+</head>
+<body>
+<div th:replace="/include/header"></div>
+<div th:replace="/include/nav"></div>
+<section>
+<div id="sectionDiv" align="center">
+<br>
+<form action="/noteupdate.do" name="noteForm" onsubmit="return noteCheck()">
+<table>
+	<tr>
+		<td align="right">카테고리 : </td>
+		<td><input type="text" name="head" th:value="${m.head}"></td>
+		<td rowspan="2" width="320" align="right">
+		<button type="button" class="gotoBoardBtn" onclick="location.href='/board.do'">목록</button>
+		<button type="button" class="gotoBoardBtn" th:onclick="@{location.href='/notedelete.do?idx=}+${m.idx}+@{'}">삭제</button>
+		<button type="submit" class="notookBtn">수정하기</button>
+		</td>
+	</tr>
+	<tr>
+		<td align="right">제&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;목 : </td>
+		<td><input type="text" name="title" th:value="${m.title}"></td>
+	</tr>
+	<tr>
+		<td align="right">내&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;용 : </td>
+		<td colspan="2"><textarea cols="110" rows="30" name="content" th:text="${m.content}"></textarea></td>
+	</tr>
+	<tr>
+		<td align="right">검&nbsp;&nbsp;색&nbsp;&nbsp;어 : </td>
+		<td colspan="2"><input type="text" name="word" size="108" th:value="${m.word}"></td>
+	</tr>
+</table>
+<input type="hidden" name="id" th:value="${session.id}">
+<input type="hidden" name="idx" th:value="${m.idx}">
+</form>
+<br>
+</div>
+</section>
+<div th:replace="/include/footer"></div>
+</body>
+</html>

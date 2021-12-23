@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link href="/include/css/main.css" rel="stylesheet" type="text/css" />
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script>
+var idCheck = 0;
+function joinCheck() {
+	if(joinForm.id.value==""){
+		alert("아이디 입력해주세요");
+		joinForm.id.focus();
+		return false;
+	}
+	else if(joinForm.pwd.value=="" || joinForm.pwd2.value==""){
+		alert("암호를 입력해주세요");
+		joinForm.pwd.focus();
+		return false;
+	}
+	else if(joinForm.pwd.value!=joinForm.pwd2.value){
+		alert("같은 암호를 입력해주세요");
+		joinForm.pwd2.value="";
+		joinForm.pwd2.focus();
+		return false;
+	}
+	else if(joinForm.name.value==""){
+		alert("이름을 입력해주세요");
+		joinForm.name.focus();
+		return false;
+	}
+	else if(joinForm.email.value==""){
+		alert("이메일을 입력해주세요");
+		joinForm.email.focus();
+		return false;
+	}
+	if(idCheck == 0){
+		alert("아이디를 확인 해주세요");
+		return false;
+	}
+}
+$(document).ready(function() {
+	$("#id").change(function(){
+		idCheck = 0;
+		var datastr = {id:$("#id").val()};
+		$.ajax({
+			tyep: "GET",
+			url: "/user_check.do",
+			data : datastr,
+			success:function(flag){
+				if(flag == 100){
+					$("#overlap").empty();
+					$("#overlap").append("<b>사용 가능한 아이디</b>");
+					idCheck = 1;
+				}
+				else{
+					$("#overlap").empty();
+					$("#overlap").append("<b>중복된 아이디</b>");
+				}
+			}
+		});
+	});
+});
+</script>
+</head>
+<body>
+<div th:replace="/include/header"></div>
+<div th:replace="/include/nav"></div>
+<section>
+<br>
+<div id="sectionDiv" align="center">
+<form name="joinForm" action="/joinok.do" onsubmit="return joinCheck()" method="post" enctype="multipart/form-data">
+<div id="overlap"><b>회원가입을 환영합니다</b></div>
+	<table>
+		<tr>
+			<td align="right">아이디 : </td>
+			<td>
+				<input type="text" name="id" id="id" placeholder="최대 12자">
+			</td>
+		</tr>
+		<tr>
+			<td align="right">암호 : </td><td><input type="password" name="pwd" placeholder="최대 15자"></td>
+		</tr>
+		<tr>
+			<td align="right">암호확인 : </td><td><input type="password" name="pwd2" placeholder="암호를 확인해주세요"></td>
+		</tr>
+		<tr>
+			<td align="right">이름 : </td><td><input type="text" name="name"></td>
+		</tr>
+		<tr>
+			<td align="right">이메일 : </td><td><input type="text" name="email"></td>
+		</tr>
+		<tr>
+			<td align="right">프로필사진 : </td><td><input type="file" name="uploadfile" data-width="30" data-height="30"></td>
+		</tr>
+		<tr>
+			<td colspan="2" align="center"><input type="submit" value="가입하기"></td>
+		</tr>
+	</table>
+</form>
+</div>
+<br>
+</section>
+<div th:replace="/include/footer"></div>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link href="/include/css/main.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+textarea{
+		margin: 0px; 
+		width: 634px; 
+		height: 457px;
+		resize: none;
+		background-color: #FEFBF3;
+		outline: none;
+	}
+table{
+	width: 650px;
+	border: solid 1px;;
+}
+#contentTbl{
+}
+#replyTbl{
+	font-size: 13px;
+}
+#replyWriteTbl{
+}
+.font13{
+	font-size: 12px;
+}
+</style>
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#delBtn > *").click(function(){
+		var idx = $(this).attr("value1")
+		var parent = $(this).attr("value2")
+		var id = $(this).attr("value3")
+		location.href="/deleteReply.do?idx=" + idx+"&parent="+ parent+"&id="+ id;
+	});
+	$("#reBtn > *").click(function(data){
+		var idx = $(this).attr("value4");
+		var index = $(this).attr("value2");
+		var id = $(this).attr("value3");
+		var parent = $(this).attr("value1");
+		var sort = $(this).attr("value5");
+		var lvl = $(this).attr("value6");
+		var staticId = $(this).attr("value7");
+		var trName = "#re"+index;
+		var html = 
+		html +=		"<tr class='reply'><td></td>";
+		html += 		"<td><input type='text' id='reContent' size=46></td>";
+		html += 		"<td><input type='button' value='작성' onClick=insert('"+id+"',"+idx+","+parent+","+sort+","+lvl+",'"+staticId+"')></td>";
+		html += 	"</tr>";
+		$(".reply").remove();
+		$(trName).after(html);
+		$("#replyTbl > #replyText").append("dd");
+	});
+});
+function insert(id,idx,parent,sort,lvl,staticId) {
+	var content = document.getElementById("reContent").value;
+	location.href="/insertReply.do?id="+ id +"&idx="+ idx +"&content="+ content +"&parent="+ parent+"&sort="+ sort+"&lvl="+ lvl+"&staticId="+ staticId;
+}
+function del(idx){
+	location.href="/deleteCommunity.do?idx=" + idx;
+}
+</script>
+</head>
+<body>
+<div th:replace="/include/header"></div>
+<div th:replace="/include/nav"></div>
+<section>
+<div id="sectionDiv" align="center">
+<br>
+<table id="contentTbl">
+	<caption>
+		<div align="right">
+			<button 
+				th:if="${session.id == m.id || session.id == 'admin'}" 
+				th:onclick="|del('${m.idx}')|">
+					삭제
+			</button>
+			<button onClick="location.href='/newcommunity.do'">글쓰기</button>
+			<button onClick="location.href='/community.do'">목록</button>
+		</div>
+	</caption>
+	<tr>
+		<td width="10"><img th:src="@{/img/profile/}+${s}" width="50" height="50"></td>
+		<td width="500" th:text="${m.id} + @{&nbsp;:&nbsp;} + ${m.title}" align="center" colspan="2"></td>
+	</tr>
+	<tr>
+		<td colspan="3"><textarea th:text="${m.content}" readonly></textarea></td>
+	</tr>
+</table>
+<br>
+<table id="replyTbl" th:if="${r.size>0}">
+	<tr th:each="re,index : ${r}" th:id="@{re}+${index.index}">
+		<td width="120" align="right">
+			<img th:src="@{/img/profile/}+${re.filename}" width="20" height="20">
+			<span class="font13" th:text="${re.id}"></span>&emsp;
+		</td>
+		<td th:if="${re.lvl==1}">
+			<span class="font13" th:text="${re.content}"></span>
+		</td>
+		<td th:if="${re.lvl==2}" bgcolor="dddddd">
+			<span class="font13" th:text="@{└}+${re.content}"></span>
+		</td>
+		<td width="150">
+			<span class="font13" th:text="${re.writedate}"></span>
+			<span id="reBtn">
+				<input type="image" 
+					th:src="@{/img/re.png}" 
+					th:value1="${re.idx}" 
+					th:value2="${index.index}" 
+					th:value3="${session.id}" 
+					th:value4="${m.idx}" 
+					th:value5="${re.sort}" 
+					th:value6="${re.lvl}"
+					th:value7="${m.id}"
+					th:if="${re.lvl < 2}">
+			</span>
+			<span id="delBtn">
+				<input type="image" 
+					th:src="@{/img/del.png}" 
+					th:value1="${re.idx}" 
+					th:value2="${m.idx}" 
+					th:value3="${m.id}" 
+					th:if="${re.id == session.id || session.id == 'admin'}" >
+			</span>
+		</td>
+	</tr>
+	<tr>
+		<td id="replyId"></td><td id="replyText"></td><td id="replyBtn"></td>
+	</tr>
+</table>
+<br>
+<table id="replyWriteTbl">
+	<tr>
+		<form action="/insertReply.do">
+			<td width="120" align="right">
+				<div>
+					<img th:src="@{/img/profile/}+${k}" width="20" height="20">
+					<span class="font13" th:text="${session.id}"></span>&emsp;
+				</div>
+			</td>
+			<td>
+				<input type="text" name="content" size="45">
+				<input type="hidden" name="id" th:value="${m.id}">
+				<input type="hidden" name="idx" th:value="${m.idx}">
+			</td>
+			<td width="150" align="left">
+				<input type="submit" value="댓글작성">
+			</td>
+		</form>
+	</tr>
+</table>
+
+<br>
+</div>
+</section>
+<div th:replace="/include/footer"></div>
+</body>
+</html>

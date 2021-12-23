@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link href="/include/css/main.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div th:replace="/include/header"></div>
+<div th:replace="/include/nav"></div>
+<section>
+<br>
+<div id="sectionDiv" align="center">
+<form name="joinForm" action="/myinfoupdate.do" onsubmit="return joinCheck()" method="post" enctype="multipart/form-data">
+<div id="overlap"><b th:text="${m.id} + @{님의 정보입니다}"></b></div>
+<input type="hidden" name="id" th:value="${m.id}">
+	<table>
+		<tr>
+			<td colspan="2" align="center"><img th:src="@{/img/profile/}+${m.filename}" width="100" height="100"></td>
+		</tr>
+		<tr>
+			<td align="right">암호변경 : </td><td><input type="password" name="pwd"></td>
+		</tr>
+		<tr>
+			<td align="right">암호확인 : </td><td><input type="password" name="pwd2"></td>
+		</tr>
+		<tr>
+			<td align="right">이름 : </td><td><input type="text" name="name" th:value="${m.name}"></td>
+		</tr>
+		<tr>
+			<td align="right">이메일 : </td><td><input type="text" name="email" th:value="${m.email}"></td>
+		</tr>
+		<tr>
+			<td align="right">프로필사진 : </td><td><input type="file" name="uploadfile" data-width="30" data-height="30"></td>
+		</tr>
+		<tr>
+			<td colspan="2" align="center">
+				<input type="submit" value="수정">
+				<button type="button" th:onclick="@{location.href='/myinfodelete.do(id=${m.id})}+@{'}">회원탈퇴</button>
+			</td>
+		</tr>
+	</table>
+</form>
+</div>
+<br>
+</section>
+<div th:replace="/include/footer"></div>
+</body>
+</html>

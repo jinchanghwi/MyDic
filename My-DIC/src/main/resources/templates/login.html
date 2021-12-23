@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link href="/include/css/main.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div th:replace="/include/header"></div>
+<div th:replace="/include/nav"></div>
+<section>
+<br>
+<div id="sectionDiv" align="center">
+<form action="/loginok.do">
+	<table>
+		<tr>
+			<td align="right">아이디 : </td><td><input type="text" name="id"></td>
+		</tr>
+		<tr>
+			<td align="right">암호 : </td><td><input type="password" name="pwd"></td>
+		</tr>
+		<tr>
+			<td colspan="2" align="center"><input type="submit" value="로그인"></td>
+		</tr>
+	</table>
+</form>
+</div>
+<br>
+</section>
+<div th:replace="/include/footer"></div>
+</body>
+</html>

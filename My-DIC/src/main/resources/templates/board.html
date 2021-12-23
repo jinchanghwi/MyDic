@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link href="/include/css/main.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+table {
+	border: 5px;
+	border-style: ridge;
+}
+th{
+	background-color: #79B4B7;
+}
+td{
+	background-color: #F8F0DF;
+}
+#endStop,#startStop{
+	color: red;
+}
+</style>
+</head>
+<body>
+<div th:replace="/include/header"></div>
+<div th:replace="/include/nav"></div>
+<section>
+<br>
+<div id="sectionDiv" align="center">
+<h4 th:text="${session.id} + @{님 반갑습니다}"></h4>
+<h5 th:if="${li==null && page.result!='noresult'}">
+	아직 작성된 노트가 없습니다
+</h5>
+<h5 th:if="${li==null && page.result!='noresult'}">
+	아래 버튼으로 새 노트를 추가해보세요
+</h5>
+<button onClick="location.href='/newnote.do'" th:if="${li==null && page.result!='noresult'}">
+	새 노트
+</button>
+<span th:if="${page.result=='noresult'}" th:text="${page.ch2}+@{에 대한 검색결과가 없습니다}">
+</span><p>
+<button onClick="location.href='/board.do'" th:if="${page.result=='noresult'}">돌아가기</button>
+<div th:if="${li}!=null">
+<table border="1" width="650">
+	<caption>
+		<div align="right">
+			<button onClick="location.href='/newnote.do'">새 노트</button>
+		</div>
+	</caption>
+	<tr>
+		<th width="75" align="center">카테고리</th>
+		<th align="center">제목</th>
+		<th width="75" align="center">작성일</th>
+	</tr>
+	<tr th:each="m : ${li}">
+		<td align="right" th:text="${m.head}"></td>
+		<td><a th:href="@{/content.do?idx=} + ${m.idx}" th:text="${m.title}"></a></td>
+		<td th:text="${#strings.substring(m.writedate, 2, 10)}" align="center"></td>
+	</tr>
+</table>
+<form action="/board.do">
+	<select name="ch1">
+		<option value="word">검색어</option>
+		<option value="head">카테고리</option>
+		<option value="title">제목</option>
+		<option value="content">내용</option>
+	</select>
+		<input type="text" name="ch2">
+		<input type="submit" value="검색">
+</form>
+<a 
+	th:href="@{/board.do(id=${session.id},nowRecord=1,ch1=${page.ch1},ch2=${page.ch2})}" 
+	th:if="${1<page.nowPage}">
+	맨앞
+</a>
+<a 
+	th:href="@{/board.do(id=${session.id},nowRecord=${page.nowRecord-page.listSize},ch1=${page.ch1},ch2=${page.ch2})}" 
+	th:if="${1<page.nowPage}">
+	이전
+</a>
+<span th:if="${1>=page.nowPage}" id="startStop">맨앞 이전</span>
+<span th:each="list: ${#numbers.sequence(page.startPage-1, page.endPage-1)}">
+	<a
+		th:href="@{/board.do(id=${session.id},nowRecord=${list*page.listSize+1},ch1=${page.ch1},ch2=${page.ch2})}" 
+		th:text="${list+1}"
+		th:if="${list<page.totalPage && list+1!=page.nowPage}"
+	></a>
+	<a
+		th:href="@{/board.do(id=${session.id},nowRecord=${list*page.listSize+1},ch1=${page.ch1},ch2=${page.ch2})}" 
+		th:text="@{[}+${list+1}+@{]}"
+		th:if="${list<page.totalPage && list+1==page.nowPage}"
+	></a>
+</span>
+<span th:if="${page.totalPage<=page.nowPage}" id="endStop">다음 맨뒤</span>
+<a 
+	th:href="@{/board.do(id=${session.id},nowRecord=${page.nowRecord+page.listSize},ch1=${page.ch1},ch2=${page.ch2})}"
+	th:if="${page.totalPage>page.nowPage}">
+	다음
+</a>
+<a 
+	th:href="@{/board.do(id=${session.id},nowRecord=${page.totalRecord/10*10+1},ch1=${page.ch1},ch2=${page.ch2})}"
+	th:if="${page.totalPage>page.nowPage}">
+	맨뒤
+</a>
+</div>
+</div>
+<br>
+</section>
+<div th:replace="/include/footer"></div>
+</body>
+</html>

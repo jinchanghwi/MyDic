@@ -1,0 +1,17 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<div class="navLine"></div>
+<nav>
+	<div align="right">
+	| 
+	<span th:if="${session.id}!=null"><a href="/board.do">My-DIC</a> | </span>
+	<span th:if="${session.id}!=null"><a href="/community.do">커뮤니티</a> | </span>
+	<span th:if="${session.id}!=null"><a href="/chat.do">채팅방</a> | </span>
+	<span th:if="${session.id}!=null"><a href="/myinfo.do">내정보</a> | </span>
+	<span th:if="${session.id}!=null"><a href="/logout.do">로그아웃</a> | </span>
+	<span th:if="${session.id}==null"><a href="/login.do">로그인</a> | </span>
+	<span th:if="${session.id}==null"><a href="/join.do">회원가입</a> | </span>
+	<a href="/">홈</a> 
+	| &emsp;
+	</div>
+</nav>
+<div class="navLine"></div>
